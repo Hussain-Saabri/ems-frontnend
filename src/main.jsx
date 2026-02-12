@@ -10,7 +10,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google'
 const queryClient = new QueryClient()
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <GoogleOAuthProvider clientId="403935636159-gjke9f1bnlcm1dapu4mkpsugi4roamul.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider delayDuration={300}>
           <BrowserRouter>
