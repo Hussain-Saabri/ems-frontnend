@@ -1,0 +1,225 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { toast } from 'sonner';
+import {
+    ArrowLeft01Icon,
+    UserIcon,
+    Mail01Icon,
+    CallIcon,
+    Briefcase01Icon,
+    Building01Icon,
+    Calendar01Icon
+} from 'hugeicons-react';
+import apiClient from '@/api/apiClient';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+
+const employeeSchema = z.object({
+    fullName: z.string().min(2, "Name must be at least 2 characters"),
+    email: z.string().email("Invalid email address"),
+    phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
+    designation: z.string().min(1, "Role is required"),
+    department: z.string().min(1, "Department is required"),
+    dateOfJoining: z.string().min(1, "Joining date is required"),
+    status: z.enum(["Active", "Inactive"]),
+});
+
+export default function AddEmployee() {
+    const navigate = useNavigate();
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        watch,
+        setValue
+    } = useForm({
+        resolver: zodResolver(employeeSchema),
+        defaultValues: {
+            status: "Active",
+            dateOfJoining: new Date().toISOString().split('T')[0]
+        }
+    });
+
+    const currentStatus = watch("status");
+
+    const onSubmit = async (data) => {
+        setIsSubmitting(true);
+        try {
+            await apiClient.post('/employees', data);
+            toast.success('Employee Added successfully! 🎉');
+            navigate('/employees');
+        } catch (error) {
+            console.error('Error creating employee:', error);
+            toast.error(error.response?.data?.message || 'Failed to create employee. Please try again.');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    return (
+        <div className="space-y-6">
+            
+            
+
+            {/* Form Card */}
+            <div className="bg-white border border-gray-300 rounded-[12px] mb-15 overflow-hidden">
+                <form onSubmit={handleSubmit(onSubmit)} className="p-8 space-y-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+
+                        {/* Full Name */}
+                        <div className="space-y-2">
+                            <label className="text-sm font-semibold text-gray-700">Full Name</label>
+                            <div className="relative">
+                                <Input
+                                    {...register("fullName")}
+                                    placeholder="e.g. John Doe"
+                                    className={`h-11 ${errors.fullName ? 'border-red-500 focus-visible:ring-red-500' : 'border-gray-200 focus-visible:ring-blue-500'}`}
+                                />
+                            </div>
+                            {errors.fullName && <p className="text-xs text-red-500">{errors.fullName.message}</p>}
+                        </div>
+
+                        {/* Email Address */}
+                        <div className="space-y-2">
+                            <label className="text-sm font-semibold text-gray-700">Email Address</label>
+                            <Input
+                                {...register("email")}
+                                type="email"
+                                placeholder="e.g. john.doe@company.com"
+                                className={`h-11 ${errors.email ? 'border-red-500 focus-visible:ring-red-500' : 'border-gray-200 focus-visible:ring-blue-500'}`}
+                            />
+                            {errors.email && <p className="text-xs text-red-500">{errors.email.message}</p>}
+                        </div>
+
+                        {/* Phone Number */}
+                        <div className="space-y-2">
+                            <label className="text-sm font-semibold text-gray-700">Phone Number</label>
+                            <Input
+                                {...register("phoneNumber")}
+                                placeholder="e.g. +1 (555) 000-0000"
+                                className={`h-11 ${errors.phoneNumber ? 'border-red-500 focus-visible:ring-red-500' : 'border-gray-200 focus-visible:ring-blue-500'}`}
+                            />
+                            {errors.phoneNumber && <p className="text-xs text-red-500">{errors.phoneNumber.message}</p>}
+                        </div>
+
+                        {/* Department */}
+                        <div className="space-y-2">
+                            <label className="text-sm font-semibold text-gray-700">Department</label>
+                            <select
+                                {...register("department")}
+                                className={`w-full h-11 px-3 rounded-md border text-sm outline-none transition-all focus:ring-2 appearance-none bg-no-repeat bg-[right_1rem_center] bg-[length:1em_1em]
+                                    ${errors.department
+                                        ? 'border-red-500 focus:ring-red-500/20'
+                                        : 'border-gray-200 focus:ring-blue-500/20'}`}
+                                style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236B7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")` }}
+                            >
+                                <option value="">Select Department</option>
+                                <option value="Engineering">Engineering</option>
+                                <option value="Design">Design</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="Sales">Sales</option>
+                                <option value="Support">Support</option>
+                                <option value="HR">HR</option>
+                            </select>
+                            {errors.department && <p className="text-xs text-red-500">{errors.department.message}</p>}
+                        </div>
+
+                        {/* Role (Designation) */}
+                        <div className="space-y-2">
+                            <label className="text-sm font-semibold text-gray-700">Role</label>
+                            <select
+                                {...register("designation")}
+                                className={`w-full h-11 px-3 rounded-md border text-sm outline-none transition-all focus:ring-2 appearance-none bg-no-repeat bg-[right_1rem_center] bg-[length:1em_1em]
+                                    ${errors.designation
+                                        ? 'border-red-500 focus:ring-red-500/20'
+                                        : 'border-gray-200 focus:ring-blue-500/20'}`}
+                                style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236B7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")` }}
+                            >
+                                <option value="">Select Role</option>
+                                <option value="Frontend Developer">Frontend Developer</option>
+                                <option value="Backend Developer">Backend Developer</option>
+                                <option value="Fullstack Developer">Fullstack Developer</option>
+                                <option value="UI/UX Designer">UI/UX Designer</option>
+                                <option value="Product Manager">Product Manager</option>
+                                <option value="QA Engineer">QA Engineer</option>
+                                <option value="Support Engineer">Support Engineer</option>
+                            </select>
+                            {errors.designation && <p className="text-xs text-red-500">{errors.designation.message}</p>}
+                        </div>
+
+                        {/* Date of Joining */}
+                        <div className="space-y-2">
+                            <label className="text-sm font-semibold text-gray-700">Date of Joining</label>
+                            <Input
+                                {...register("dateOfJoining")}
+                                type="date"
+                                className={`h-11 ${errors.dateOfJoining ? 'border-red-500 focus-visible:ring-red-500' : 'border-gray-200 focus-visible:ring-blue-500'}`}
+                            />
+                            {errors.dateOfJoining && <p className="text-xs text-red-500">{errors.dateOfJoining.message}</p>}
+                        </div>
+
+                        {/* Status */}
+                        <div className="space-y-3">
+                            <label className="text-sm font-semibold text-gray-700 block">Status</label>
+                            <div className="flex items-center gap-6 h-11">
+                                <label className="flex items-center gap-2 cursor-pointer group">
+                                    <div className="relative flex items-center justify-center">
+                                        <input
+                                            type="radio"
+                                            value="Active"
+                                            {...register("status")}
+                                            className="sr-only"
+                                        />
+                                        <div className={`w-5 h-5 rounded-full border-2 transition-all ${currentStatus === 'Active' ? 'border-blue-600 bg-blue-600' : 'border-gray-300 group-hover:border-gray-400'}`}>
+                                            {currentStatus === 'Active' && <div className="w-1.5 h-1.5 bg-white rounded-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />}
+                                        </div>
+                                    </div>
+                                    <span className={`text-sm font-medium ${currentStatus === 'Active' ? 'text-gray-900' : 'text-gray-500'}`}>Active</span>
+                                </label>
+
+                                <label className="flex items-center gap-2 cursor-pointer group">
+                                    <div className="relative flex items-center justify-center">
+                                        <input
+                                            type="radio"
+                                            value="Inactive"
+                                            {...register("status")}
+                                            className="sr-only"
+                                        />
+                                        <div className={`w-5 h-5 rounded-full border-2 transition-all ${currentStatus === 'Inactive' ? 'border-blue-600 bg-blue-600' : 'border-gray-300 group-hover:border-gray-400'}`}>
+                                            {currentStatus === 'Inactive' && <div className="w-1.5 h-1.5 bg-white rounded-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />}
+                                        </div>
+                                    </div>
+                                    <span className={`text-sm font-medium ${currentStatus === 'Inactive' ? 'text-gray-900' : 'text-gray-500'}`}>Inactive</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Form Actions */}
+                    <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            className="h-11 px-6 border-gray-200 text-gray-700 hover:bg-gray-50"
+                            onClick={() => navigate('/employees')}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            type="submit"
+                            disabled={isSubmitting}
+                            className="h-11 px-8 bg-[#2563EB] hover:bg-blue-700 text-white shadow-sm shadow-blue-200 disabled:opacity-70 transition-all font-semibold"
+                        >
+                            {isSubmitting ? 'Creating...' : 'Create Employee'}
+                        </Button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+}

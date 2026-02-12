@@ -2,11 +2,16 @@ import { cn } from "@/lib/utils"
 
 function Skeleton({
     className,
+    variant = "pulse", // "pulse" or "shimmer"
     ...props
 }) {
     return (
         <div
-            className={cn("animate-pulse rounded-md bg-slate-100 dark:bg-slate-800", className)}
+            className={cn(
+                "rounded-md bg-slate-100",
+                variant === "pulse" ? "animate-pulse" : "animate-shimmer",
+                className
+            )}
             {...props}
         />
     )

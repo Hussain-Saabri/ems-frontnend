@@ -16,15 +16,19 @@ export function NavItem({
     label,
     collapsed = false,
     className,
+    onClick,
 }) {
     const location = useLocation();
-    const isActive = location.pathname === href || (href !== "/" && location.pathname.startsWith(href));
+    const isActive = href === "/"
+        ? location.pathname === "/"
+        : (location.pathname === href || (href !== "/employees" && location.pathname.startsWith(href)));
 
     const buttonContent = (
         <Link
             to={href}
+            onClick={onClick}
             className={cn(
-                "group relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-200 ease-in-out",
+                "group relative flex items-center gap-1.5 px-2 py-2.5 rounded-xl transition-all duration-200",
                 collapsed ? "justify-center px-2" : "justify-start",
 
                 // Default State (Inactive)
@@ -33,7 +37,7 @@ export function NavItem({
                 // Active State
                 isActive &&
                 `
-          bg-gray-50 text-[#111] font-bold shadow-sm
+          bg-gray-50 text-[#111] font-semibold
           border border-gray-200
         `,
 

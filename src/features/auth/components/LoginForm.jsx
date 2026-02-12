@@ -7,10 +7,12 @@ import { loginSchema } from '../schemas/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '../hooks/useAuth';
 import { Link } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
+import { Logo } from '@/components/base/Logo';
 
 const LoginForm = () => {
     const [showPassword, setShowPassword] = useState(false);
-    const { login, isLoading } = useAuth();
+    const { login, googleLogin, isLoading } = useAuth();
 
     const {
         register,
@@ -39,13 +41,8 @@ const LoginForm = () => {
         <div className="w-full max-w-md border border-gray-300 bg-white rounded-2xl p-8 transition-all duration-300">
             {/* Header */}
             <div className="flex flex-col items-center mb-1">
-                <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mb-2 shadow-lg shadow-blue-200">
-                    <span className="text-white font-bold text-xl">EMS</span>
-                </div>
+                <Logo width={48} height={48} showText={false} className="mb-2" />
                 <h1 className="text-2xl font-bold text-gray-900 mb-2">Login</h1>
-                <p className="text-gray-500 text-center text-sm">
-                    Welcome back! Please enter your credentials to access your account.
-                </p>
             </div>
 
             {/* Form */}
@@ -128,14 +125,36 @@ const LoginForm = () => {
                 </Button>
             </form>
 
+            <div className="mt-6 flex flex-col items-center gap-4">
+                <div className="relative w-full text-center">
+                    <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-gray-200"></div>
+                    </div>
+                    <span className="relative px-3 bg-white text-xs font-medium text-gray-400 uppercase tracking-widest">
+                        Or continue with
+                    </span>
+                </div>
+
+                <div className="w-full flex justify-center">
+                    <GoogleLogin
+                        onSuccess={credentialResponse => {
+                            googleLogin(credentialResponse.credential);
+                        }}
+                        onError={() => {
+                            console.log('Google Login Failed');
+                        }}
+                        useOneTap
+                        theme="filled_blue"
+                        shape="pill"
+                        size="large"
+                        width="100%"
+                    />
+                </div>
+            </div>
+
             {/* Footer */}
             <div className="mt-6 text-center">
-                <p className="text-sm text-gray-500 font-medium">
-                    Don't have an account?{' '}
-                    <Link to="/signup" className="text-blue-600 hover:text-blue-700 font-bold underline-offset-4 hover:underline transition-all">
-                        Sign up
-                    </Link>
-                </p>
+
             </div>
         </div>
     );
