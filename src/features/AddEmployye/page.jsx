@@ -4,15 +4,6 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { toast } from 'sonner';
-import {
-    ArrowLeft01Icon,
-    UserIcon,
-    Mail01Icon,
-    CallIcon,
-    Briefcase01Icon,
-    Building01Icon,
-    Calendar01Icon
-} from 'hugeicons-react';
 import apiClient from '@/api/apiClient';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -65,16 +56,27 @@ export default function AddEmployee() {
         setIsSubmitting(true);
         try {
             await apiClient.post('/employees', data);
-            toast.success("Employee... Added Successfully 🎉", {
+            toast.success("Employee Added Successfully 🎉", {
+  
+  duration: 3500,
+  className: `
+    relative
+    bg-white/80 backdrop-blur-xl
+    border border-white/40
+    rounded-2xl
+    shadow-[0_20px_60px_rgba(0,0,0,0.12)]
+    px-6 py-5
+    overflow-hidden
+  `,
+});
 
-                className:
-                    "bg-white border border-gray-200 border-l-4 border-l-green-500 rounded-2xl shadow-2xl p-4",
-            });
 
             navigate('/employees');
         } catch (error) {
             console.error('Error creating employee:', error);
-            toast.error(error.response?.data?.message || 'Failed to create employee. Please try again.');
+            const errorMessage = error.response?.data?.message || 'Failed to create employee. Please try again.';
+
+            toast.error(errorMessage);
         } finally {
             setIsSubmitting(false);
         }

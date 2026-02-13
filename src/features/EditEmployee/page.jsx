@@ -27,10 +27,9 @@ import {
 import { EditEmployeeSkeleton } from './EditEmployeeSkeleton';
 
 const employeeSchema = z.object({
-    fullName: z.string().min(3, "Full name is required"),
-    email: z.string().min(1, "Email address is required").email("Invalid email format"),
-    phoneNumber: z.string().min(1, "Phone number is required")
-        .regex(/^[0-9]{10,15}$/, "Phone number must be 10-15 digits only"),
+    fullName: z.string().min(2, "Name must be at least 2 characters"),
+    email: z.string().email("Invalid email address"),
+    phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
     designation: z.string().min(1, "Role is required"),
     department: z.string().min(1, "Department is required"),
     dateOfJoining: z.string().min(1, "Joining date is required"),
@@ -74,13 +73,13 @@ export default function EditEmployee() {
     useEffect(() => {
         if (employee) {
             reset({
-                fullName: employee.fullName,
-                email: employee.email,
-                phoneNumber: employee.phoneNumber,
-                designation: employee.designation,
-                department: employee.department,
+                fullName: employee.fullName || "",
+                email: employee.email || "",
+                phoneNumber: employee.phoneNumber || "",
+                designation: employee.designation || "",
+                department: employee.department || "",
                 dateOfJoining: employee.dateOfJoining ? new Date(employee.dateOfJoining).toISOString().split('T')[0] : '',
-                status: employee.status
+                status: employee.status || "Active"
             });
         }
     }, [employee, reset]);
@@ -91,9 +90,7 @@ export default function EditEmployee() {
         setIsSubmitting(true);
         try {
             await apiClient.put(`/employees/${id}`, data);
-            toast.success('Successfully Updated', {
-                description: 'Employee profile updated successfully! 🎉'
-            });
+            toast.success('Employee updated successfully! 🎉');
             navigate('/employees');
         } catch (error) {
             console.error('Error updating employee:', error);
@@ -187,7 +184,8 @@ export default function EditEmployee() {
                                 render={({ field }) => (
                                     <Select
                                         onValueChange={field.onChange}
-                                        value={field.value}
+                                        value={field.value || ""}
+                                        key={field.value || "dept-placeholder"}
                                     >
                                         <SelectTrigger
                                             className={`h-11 ${errors.department ? 'border-red-500 focus:ring-red-500/20' : 'border-gray-200 focus:ring-blue-500/20'}`}
@@ -217,7 +215,8 @@ export default function EditEmployee() {
                                 render={({ field }) => (
                                     <Select
                                         onValueChange={field.onChange}
-                                        value={field.value}
+                                        value={field.value || ""}
+                                        key={field.value || "role-placeholder"}
                                     >
                                         <SelectTrigger
                                             className={`h-11 ${errors.designation ? 'border-red-500 focus:ring-red-500/20' : 'border-gray-200 focus:ring-blue-500/20'}`}
