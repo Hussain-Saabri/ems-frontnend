@@ -41,7 +41,13 @@ export const useDeleteEmployee = () => {
         mutationFn: (id) => employeeService.hardDeleteEmployee(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: EMPLOYEE_QUERY_KEYS.all });
-            toast.success('Employee deleted successfully');
+            toast.error("Employee deleted successfully", {
+                style: {
+                    background: "#fee2e2",
+                    color: "#991b1b",
+                    border: "1px solid #fecaca"
+                }
+            });
         },
         onError: (error) => {
             toast.error(error.response?.data?.message || 'Failed to delete employee');
@@ -59,7 +65,7 @@ export const useSoftDeleteEmployee = () => {
         mutationFn: (id) => employeeService.softDeleteEmployee(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: EMPLOYEE_QUERY_KEYS.all });
-            toast.success('Employee archived successfully');
+            toast.error('Employee archived successfully');
         },
         onError: (error) => {
             toast.error(error.response?.data?.message || 'Failed to archive employee');
