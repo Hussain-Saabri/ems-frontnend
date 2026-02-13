@@ -4,7 +4,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { toast } from 'sonner';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
     ArrowLeft01Icon,
     UserIcon,
@@ -39,6 +39,7 @@ const employeeSchema = z.object({
 export default function EditEmployee() {
     const { id } = useParams();
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const { data: employee, isLoading, error } = useQuery({
@@ -91,6 +92,10 @@ export default function EditEmployee() {
         try {
             await apiClient.put(`/employees/${id}`, data);
             toast.success('Employee updated successfully! 🎉');
+
+            // Invalidate and refetch
+            queryClient.invalidateQueries({ queryKey: ['employees'] });
+
             navigate('/employees');
         } catch (error) {
             console.error('Error updating employee:', error);

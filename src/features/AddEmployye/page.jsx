@@ -4,6 +4,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { toast } from 'sonner';
+import { useQueryClient } from '@tanstack/react-query';
 import apiClient from '@/api/apiClient';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -28,6 +29,7 @@ const employeeSchema = z.object({
 
 export default function AddEmployee() {
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const {
@@ -57,9 +59,9 @@ export default function AddEmployee() {
         try {
             await apiClient.post('/employees', data);
             toast.success("Employee Added Successfully 🎉", {
-  
-  duration: 3500,
-  className: `
+
+                duration: 3500,
+                className: `
     relative
     bg-white/80 backdrop-blur-xl
     border border-white/40
@@ -68,8 +70,10 @@ export default function AddEmployee() {
     px-6 py-5
     overflow-hidden
   `,
-});
+            });
 
+            // Invalidate and refetch
+            queryClient.invalidateQueries({ queryKey: ['employees'] });
 
             navigate('/employees');
         } catch (error) {

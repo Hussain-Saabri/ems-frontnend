@@ -16,6 +16,13 @@ export default function DeleteConfirmationDialog({
 }) {
     const [deleteType, setDeleteType] = useState('soft'); // 'soft' or 'hard'
 
+    // Reset delete type to 'soft' whenever the dialog opens
+    React.useEffect(() => {
+        if (isOpen) {
+            setDeleteType('soft');
+        }
+    }, [isOpen]);
+
     if (!isOpen) return null;
 
     return (
@@ -54,8 +61,8 @@ export default function DeleteConfirmationDialog({
                         <button
                             onClick={() => setDeleteType('soft')}
                             className={`flex flex-col items-center gap-3 p-4 rounded-2xl border-2 transition-all ${deleteType === 'soft'
-                                    ? 'border-blue-600 bg-blue-50/50'
-                                    : 'border-gray-100 bg-white hover:border-gray-200'
+                                ? 'border-blue-600 bg-blue-50/50'
+                                : 'border-gray-100 bg-white hover:border-gray-200'
                                 }`}
                         >
                             <Archive01Icon className={`h-6 w-6 ${deleteType === 'soft' ? 'text-blue-600' : 'text-gray-400'}`} />
@@ -68,8 +75,8 @@ export default function DeleteConfirmationDialog({
                         <button
                             onClick={() => setDeleteType('hard')}
                             className={`flex flex-col items-center gap-3 p-4 rounded-2xl border-2 transition-all ${deleteType === 'hard'
-                                    ? 'border-rose-600 bg-rose-50/50'
-                                    : 'border-gray-100 bg-white hover:border-gray-200'
+                                ? 'border-rose-600 bg-rose-50/50'
+                                : 'border-gray-100 bg-white hover:border-gray-200'
                                 }`}
                         >
                             <Delete02Icon className={`h-6 w-6 ${deleteType === 'hard' ? 'text-rose-600' : 'text-gray-400'}`} />

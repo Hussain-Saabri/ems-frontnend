@@ -62,8 +62,8 @@ const Employees = () => {
     const [selectedEmployee, setSelectedEmployee] = useState(null);
     const [isDeleting, setIsDeleting] = useState(false);
     const debouncedSearch = useDebounce(globalFilter, 500);
-   
-    
+
+
     const increment = useStore((state) => state.increment);
     const decrement = useStore((state) => state.decrement);
     const { data: employeesData, isLoading, error, refetch } = useQuery({
@@ -210,7 +210,13 @@ const Employees = () => {
                 await apiClient.delete(endpoint);
             }
 
-            toast.success(`Employee ${type === 'soft' ? 'archived' : 'deleted'} successfully!`);
+            toast.success(
+                `Employee ${type === "soft" ? "archived" : "deleted"} successfully`,
+                {
+                    className: 'premium-toast-destructive',
+                    duration: 3500,
+                }
+            );
             refetch();
             setIsDeleteDialogOpen(false);
         } catch (error) {
@@ -232,6 +238,7 @@ const Employees = () => {
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
+        autoResetPageIndex: false,
     });
 
     return (
@@ -250,7 +257,7 @@ const Employees = () => {
                 </div>
 
                 <Link to="/employees/add">
-                    
+
                     <Button className="bg-[#2563EB] hover:bg-[#00A4FF] text-white gap-2 h-10 px-4">
                         <PlusSignIcon className="h-5 w-5" />
                         Add Employee
