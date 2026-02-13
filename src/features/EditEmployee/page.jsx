@@ -27,14 +27,9 @@ import {
 import { EditEmployeeSkeleton } from './EditEmployeeSkeleton';
 
 const employeeSchema = z.object({
-    fullName: z.string()
-        .min(3, "Full name must be at least 3 characters")
-        .max(50, "Full name must be at most 50 characters"),
-    email: z.string()
-        .email("Invalid email format")
-        .min(1, "Email is required"),
-    phoneNumber: z.string()
-        .min(1, "Phone number is required")
+    fullName: z.string().min(3, "Full name is required"),
+    email: z.string().min(1, "Email address is required").email("Invalid email format"),
+    phoneNumber: z.string().min(1, "Phone number is required")
         .regex(/^[0-9]{10,15}$/, "Phone number must be 10-15 digits only"),
     designation: z.string().min(1, "Role is required"),
     department: z.string().min(1, "Department is required"),
