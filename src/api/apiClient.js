@@ -16,4 +16,19 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
+// Response interceptor to handle 401 errors
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      // Import the store dynamically or use it directly if it's already set up
+      // Clear token and redirect via a global auth state if possible
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default apiClient;
