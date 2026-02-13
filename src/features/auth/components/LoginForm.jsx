@@ -48,15 +48,15 @@ const LoginForm = () => {
     };
 
     return (
-        <div className="w-full max-w-md border border-gray-300 bg-white rounded-2xl p-8 transition-all duration-300">
+        <div className="w-full max-w-md border border-gray-300 bg-white rounded-2xl p-6 transition-all duration-300">
             {/* Header */}
-            <div className="flex flex-col items-center mb-1">
-                <Logo width={48} height={48} showText={false} className="mb-2" />
-                <h1 className="text-2xl font-bold text-gray-900 mb-2">Login</h1>
+            <div className="flex flex-col items-center mb-0">
+                <Logo width={40} height={40} showText={false} className="mb-1" />
+                <h1 className="text-xl font-bold text-gray-900 mb-1">Login</h1>
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 {/* Email Field */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1.5" htmlFor="email">
@@ -73,12 +73,12 @@ const LoginForm = () => {
                             className="pl-10 h-11"
                             {...register("email")}
                         />
-                        {errors.email && (
-                            <p className="text-red-500 text-xs mt-1">
-                                {errors.email.message}
-                            </p>
-                        )}
                     </div>
+                    {errors.email && (
+                        <p className="text-red-500 text-xs mt-1">
+                            {errors.email.message}
+                        </p>
+                    )}
                 </div>
 
                 {/* Password Field */}
@@ -110,7 +110,7 @@ const LoginForm = () => {
                         </Button>
                     </div>
                     {errors.password && (
-                        <p className="text-xs mt-2 text-red-600">
+                        <p className="text-xs mt-1 text-red-600">
                             {errors.password.message}
                         </p>
                     )}
@@ -133,7 +133,7 @@ const LoginForm = () => {
                 </Button>
             </form>
 
-            <div className="mt-6 flex flex-col items-center gap-4">
+            <div className="mt-4 flex flex-col items-center gap-4">
                 <div className="relative w-full text-center">
                     <div className="absolute inset-0 flex items-center">
                         <div className="w-full border-t border-gray-200"></div>
