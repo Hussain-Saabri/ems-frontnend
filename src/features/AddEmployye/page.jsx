@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/select";
 
 const employeeSchema = z.object({
-    fullName: z.string().min(2, "Name must be at least 2 characters"),
+    fullName: z.string().min(2, "Name must be at least two characters"),
     email: z.string().email("Invalid email address"),
     phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
     designation: z.string().min(1, "Role is required"),
