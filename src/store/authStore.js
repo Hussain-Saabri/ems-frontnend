@@ -13,10 +13,11 @@ const useAuthStore = create((set) => ({
     })(),
     token: localStorage.getItem("token") || null,
     isAuthenticated: !!localStorage.getItem("token"),
-    isLoading: false,
+    isEmailLoading: false,
+    isGoogleLoading: false,
 
     login: async (data, navigate) => {
-        set({ isLoading: true });
+        set({ isEmailLoading: true });
 
         try {
             const response = await authService.login(data);
@@ -27,7 +28,7 @@ const useAuthStore = create((set) => ({
                 user,
                 token,
                 isAuthenticated: true,
-                isLoading: false,
+                isEmailLoading: false,
             });
 
             localStorage.setItem("token", token);
@@ -41,13 +42,13 @@ const useAuthStore = create((set) => ({
                 err.response?.data?.message || "Login failed";
 
             toast.error(errorMessage);
-            set({ isLoading: false });
+            set({ isEmailLoading: false });
             throw err;
         }
     },
 
     googleLogin: async (idToken, navigate) => {
-        set({ isLoading: true });
+        set({ isGoogleLoading: true });
         try {
             const response = await authService.googleLogin({ idToken });
             const { token, data: user } = response.data;
@@ -56,18 +57,18 @@ const useAuthStore = create((set) => ({
                 user,
                 token,
                 isAuthenticated: true,
-                isLoading: false,
+                isGoogleLoading: false,
             });
 
             localStorage.setItem("token", token);
             localStorage.setItem("user", JSON.stringify(user));
 
-            toast.success("Google Login successful");
+            
             if (navigate) navigate("/employees");
         } catch (err) {
             const errorMessage = err.response?.data?.message || "Google Login failed";
             toast.error(errorMessage);
-            set({ isLoading: false });
+            set({ isGoogleLoading: false });
             throw err;
         }
     },
@@ -82,7 +83,7 @@ const useAuthStore = create((set) => ({
             isAuthenticated: false,
         });
 
-        toast.info("Logged out successfully");
+        
         navigate("/");
     },
 }));

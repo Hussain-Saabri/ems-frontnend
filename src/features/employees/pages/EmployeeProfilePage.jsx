@@ -14,17 +14,25 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import DeleteEmployeeDialog from '../components/DeleteEmployeeDialog';
 import { useEmployee, useDeleteEmployee, useSoftDeleteEmployee } from '../hooks/useEmployees';
-import { Skeleton } from '@/components/ui/skeleton';
+import { ProfileSkeleton } from '../components/ProfileSkeleton';
 
 const EmployeeProfilePage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [isSkeletonForced, setIsSkeletonForced] = useState(true);
 
     const { data: employee, isLoading, error } = useEmployee(id);
     const deleteMutation = useDeleteEmployee();
     const softDeleteMutation = useSoftDeleteEmployee();
+
+    React.useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsSkeletonForced(false);
+        }, 1000);
+        return () => clearTimeout(timer);
+    }, []);
 
     const getInitials = (name) => {
         if (!name) return '??';
@@ -53,28 +61,8 @@ const EmployeeProfilePage = () => {
         }
     };
 
-    if (isLoading) {
-        return (
-            <div className="space-y-6 max-w-7xl mx-auto">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div className="flex items-center gap-4">
-                        <Skeleton className="h-10 w-10 rounded-full" />
-                        <Skeleton className="h-8 w-48" />
-                    </div>
-                </div>
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div className="lg:col-span-1">
-                        <div className="bg-white border border-gray-100 rounded-2xl p-8 flex flex-col items-center text-center shadow-sm">
-                            <Skeleton className="w-32 h-32 rounded-full" />
-                            <div className="mt-6 space-y-3 w-full flex flex-col items-center">
-                                <Skeleton className="h-6 w-3/4" />
-                                <Skeleton className="h-4 w-1/2" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
+    if (isLoading || isSkeletonForced) {
+        return <ProfileSkeleton />;
     }
 
     if (error || !employee) {
@@ -92,7 +80,7 @@ const EmployeeProfilePage = () => {
     }
 
     return (
-        <div className="space-y-6 max-w-7xl mx-auto">
+        <div className="space-y-6 max-w-7xl mx-auto animate-fade-in">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
                     <Button

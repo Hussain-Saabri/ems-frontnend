@@ -7,12 +7,14 @@ export const useAuth = () => {
     const login = useAuthStore((state) => state.login);
     const googleLogin = useAuthStore((state) => state.googleLogin);
     const logout = useAuthStore((state) => state.logout);
-    const isLoading = useAuthStore((state) => state.isLoading);
+    const isEmailLoading = useAuthStore((state) => state.isEmailLoading);
+    const isGoogleLoading = useAuthStore((state) => state.isGoogleLoading);
 
     return {
         login: (data, customNavigate) => login(data, customNavigate !== undefined ? customNavigate : navigate),
         googleLogin: (idToken, customNavigate) => googleLogin(idToken, customNavigate !== undefined ? customNavigate : navigate),
         logout: () => logout(navigate),
-        isLoading,
+        isEmailLoading,
+        isGoogleLoading,
     };
 };

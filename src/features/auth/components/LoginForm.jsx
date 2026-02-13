@@ -17,7 +17,7 @@ const LoginForm = () => {
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const [showTransition, setShowTransition] = useState(false);
-    const { login, googleLogin, isLoading } = useAuth();
+    const { login, googleLogin, isEmailLoading, isGoogleLoading } = useAuth();
 
     const {
         register,
@@ -119,10 +119,10 @@ const LoginForm = () => {
                 {/* Login Button */}
                 <Button
                     type="submit"
-                    disabled={isLoading}
+                    disabled={isEmailLoading}
                     className="w-full h-11 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl mt-2 flex items-center justify-center gap-2"
                 >
-                    {isLoading ? (
+                    {isEmailLoading ? (
                         <>
                             <Loader2 className="h-4 w-4 animate-spin" />
                             Logging in...

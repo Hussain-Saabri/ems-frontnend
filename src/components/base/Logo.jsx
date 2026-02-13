@@ -9,15 +9,9 @@ export function Logo({ width = 32, height = 32, className = "", showText = true 
                 viewBox="0 0 512 512"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                className="shrink-0 rounded-xl overflow-hidden"
+                className="shrink-0 rounded-xl overflow-hidden shadow-sm"
             >
-                <defs>
-                    <linearGradient id="ems-gradient" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
-                        <stop stop-color="#2563EB" />
-                        <stop offset="1" stop-color="#1D4ED8" />
-                    </linearGradient>
-                </defs>
-                <rect width="512" height="512" fill="url(#ems-gradient)" />
+                <rect width="512" height="512" fill="#2563EB" />
                 <path d="M160 140H352V195H225V235H332V290H225V330H352V385H160V140Z" fill="white" />
             </svg>
             {showText && (
