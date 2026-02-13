@@ -1,9 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
-import './App.css'
 import { Toaster } from 'sonner';
 import { CheckmarkCircle02Icon, Alert01Icon } from 'hugeicons-react';
 import Login from './features/auth/pages/Login'
-import Signup from './features/auth/pages/Signup'
 import { MainLayout } from './components/layout/MainLayout';
 import { ProtectedRoute } from './components/layout/ProtectedRoute';
 import {
@@ -45,7 +43,6 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to="/employees" replace />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
 
         {/* Protected Application Routes */}
         <Route element={
