@@ -16,24 +16,24 @@ function App() {
       <Toaster
         position="top-right"
         toastOptions={{
-          className: 'glass-toast !bg-white/90 backdrop-blur-md border border-gray-200/50 shadow-[0_8px_32px_rgba(0,0,0,0.12)]',
+          className: 'premium-toast',
           classNames: {
-            toast: 'group toast p-4 rounded-2xl flex items-center gap-3.5',
-            title: 'text-[14px] font-semibold tracking-tight text-gray-900',
-            description: 'text-[12px] text-gray-500 font-medium',
-            success: 'success-toast',
-            error: 'error-toast',
+            toast: 'premium-toast group',
+            title: 'toast-content-title',
+            description: 'toast-content-description',
+            success: 'premium-toast-success',
+            error: 'premium-toast-error',
           },
         }}
         icons={{
           success: (
-            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-50">
-              <CheckmarkCircle02Icon className="h-4 w-4 text-emerald-500" />
+            <div className="toast-icon-success">
+              <CheckmarkCircle02Icon className="h-5 w-5" />
             </div>
           ),
           error: (
-            <div className="flex h-6 w-6 items-center justify-center rounded-full bg-rose-50">
-              <Alert01Icon className="h-4 w-4 text-rose-500" />
+            <div className="toast-icon-error">
+              <Alert01Icon className="h-5 w-5" />
             </div>
           ),
         }}

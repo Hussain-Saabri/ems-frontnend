@@ -27,9 +27,15 @@ import {
 import { EditEmployeeSkeleton } from './EditEmployeeSkeleton';
 
 const employeeSchema = z.object({
-    fullName: z.string().min(2, "Name must be at least 2 characters"),
-    email: z.string().email("Invalid email address"),
-    phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
+    fullName: z.string()
+        .min(3, "Full name must be at least 3 characters")
+        .max(50, "Full name must be at most 50 characters"),
+    email: z.string()
+        .email("Invalid email format")
+        .min(1, "Email is required"),
+    phoneNumber: z.string()
+        .min(1, "Phone number is required")
+        .regex(/^[0-9]{10,15}$/, "Phone number must be 10-15 digits only"),
     designation: z.string().min(1, "Role is required"),
     department: z.string().min(1, "Department is required"),
     dateOfJoining: z.string().min(1, "Joining date is required"),
@@ -60,6 +66,12 @@ export default function EditEmployee() {
     } = useForm({
         resolver: zodResolver(employeeSchema),
         defaultValues: {
+            fullName: "",
+            email: "",
+            phoneNumber: "",
+            designation: "",
+            department: "",
+            dateOfJoining: "",
             status: "Active",
         }
     });
@@ -84,7 +96,9 @@ export default function EditEmployee() {
         setIsSubmitting(true);
         try {
             await apiClient.put(`/employees/${id}`, data);
-            toast.success('Employee updated successfully! 🎉');
+            toast.success('Successfully Updated', {
+                description: 'Employee profile updated successfully! 🎉'
+            });
             navigate('/employees');
         } catch (error) {
             console.error('Error updating employee:', error);
