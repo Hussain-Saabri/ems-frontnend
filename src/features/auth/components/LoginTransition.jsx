@@ -1,11 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Logo } from '@/components/base/Logo';
 
-const LoginTransition = ({ message = "Welcome back" }) => {
+const LoginTransition = ({ message = "Welcome back", onAnimationComplete }) => {
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (onAnimationComplete) onAnimationComplete();
+        }, 3000);
+
+        return () => clearTimeout(timer);
+    }, [onAnimationComplete]);
+
     return (
         <motion.div
-            initial={{ opacity: 1 }}
+            initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-white"

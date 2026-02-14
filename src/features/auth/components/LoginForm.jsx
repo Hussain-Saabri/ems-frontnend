@@ -38,19 +38,20 @@ const LoginForm = () => {
                 password: data.password,
             };
             await login(payload, null); // Pass null to skip auto-navigation
-            setShowTransition(true);
+            // Step 1: Stay on login page for 1s after success
             setTimeout(() => {
-                navigate("/employees");
-            }, 3000);
+                setShowTransition(true);
+            }, 1000);
         } catch (error) {
             console.error("Login Error:", error);
+            setShowTransition(false);
         }
     };
 
     return (
         <>
-            {!showTransition && (
-                <div className="w-full max-w-md border border-gray-300 bg-white rounded-2xl p-6 transition-all duration-300">
+            <div className="relative w-full max-w-md">
+                <div className="w-full border border-gray-300 bg-white rounded-2xl p-6 transition-all duration-300">
                     {/* Header */}
                     <div className="flex flex-col items-center mb-0">
                         <Logo width={40} height={40} showText={false} className="mb-1" />
@@ -89,7 +90,6 @@ const LoginForm = () => {
                                 <label className="block text-sm font-medium text-gray-700" htmlFor="password">
                                     Password
                                 </label>
-
                             </div>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
@@ -145,41 +145,43 @@ const LoginForm = () => {
                             </span>
                         </div>
 
-                        <div className="w-full flex justify-center">
+                        {/* Stable height container for Google Login */}
+                        <div className="w-full flex justify-center min-h-[44px]">
                             <GoogleLogin
                                 onSuccess={async (credentialResponse) => {
                                     try {
-                                        setShowTransition(true);
                                         await googleLogin(credentialResponse.credential, null);
-
+                                        // Step 1: Stay on login page for 1s after success
                                         setTimeout(() => {
-                                            navigate("/employees");
-                                        }, 3000);
+                                            setShowTransition(true);
+                                        }, 1000);
                                     } catch (error) {
                                         console.error("Google Login Error:", error);
+                                        setShowTransition(false);
                                     }
                                 }}
                                 onError={() => {
                                     console.log('Google Login Failed');
+                                    setShowTransition(false);
                                 }}
                                 useOneTap
                                 theme="filled_blue"
                                 shape="pill"
                                 size="large"
-                                width="100%"
+                                width="250px"
                             />
                         </div>
                     </div>
                 </div>
-            )}
 
-            <AnimatePresence>
-                {showTransition && <LoginTransition />}
-            </AnimatePresence>
-
-            {/* Footer */}
-            <div className="mt-6 text-center">
-
+                {/* Seamless Absolute Overlay Transition */}
+                <AnimatePresence>
+                    {showTransition && (
+                        <LoginTransition
+                            onAnimationComplete={() => navigate("/employees")}
+                        />
+                    )}
+                </AnimatePresence>
             </div>
         </>
     );
