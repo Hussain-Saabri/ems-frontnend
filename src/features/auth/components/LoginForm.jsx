@@ -6,12 +6,12 @@ import { useForm } from "react-hook-form";
 import { loginSchema } from '../schemas/authSchema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '../hooks/useAuth';
-import { useNavigate, Link } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
 import { Logo } from '@/components/base/Logo';
 import LoginTransition from './LoginTransition';
 import { AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
     const navigate = useNavigate();
@@ -53,6 +53,8 @@ const LoginForm = () => {
             reset();
         }
     };
+
+
 
     return (
         <div className="w-full max-w-md border border-gray-300 bg-white rounded-2xl p-6 transition-all duration-300">
@@ -153,15 +155,18 @@ const LoginForm = () => {
                 <div className="w-full flex justify-center">
                     <GoogleLogin
                         onSuccess={async (credentialResponse) => {
+                            // Show transition immediately to prevent flicker/delay
+                            setShowTransition(true);
                             try {
                                 await googleLogin(credentialResponse.credential, null);
-                                setShowTransition(true);
                                 setTimeout(() => {
                                     navigate("/employees");
                                 }, 3000);
                             } catch (error) {
                                 console.log("error", error);
                                 console.error("Google Login Error:", error);
+                                // Hide transition if login fails so user can retry
+                                setShowTransition(false);
                             }
                         }}
                         onError={() => {

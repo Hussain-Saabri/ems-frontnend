@@ -24,15 +24,15 @@ const useAuthStore = create((set) => ({
 
             const { token, data: user } = response.data;
 
+            localStorage.setItem("token", token);
+            localStorage.setItem("user", JSON.stringify(user));
+
             set({
                 user,
                 token,
                 isAuthenticated: true,
                 isEmailLoading: false,
             });
-
-            localStorage.setItem("token", token);
-            localStorage.setItem("user", JSON.stringify(user));
 
             toast.success("Login successful");
             if (navigate) navigate("/employees");
@@ -53,15 +53,15 @@ const useAuthStore = create((set) => ({
             const response = await authService.googleLogin({ idToken });
             const { token, data: user } = response.data;
 
+            localStorage.setItem("token", token);
+            localStorage.setItem("user", JSON.stringify(user));
+
             set({
                 user,
                 token,
                 isAuthenticated: true,
                 isGoogleLoading: false,
             });
-
-            localStorage.setItem("token", token);
-            localStorage.setItem("user", JSON.stringify(user));
 
 
             if (navigate) navigate("/employees");

@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { useNavigate, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { CheckmarkCircle02Icon, Alert01Icon } from 'hugeicons-react';
 import Login from './features/auth/pages/Login'
@@ -10,15 +10,22 @@ import {
   EditEmployeePage,
   EmployeeProfilePage
 } from './features/employees';
-import React, { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
+import { useAuth } from './features/auth/hooks/useAuth';
+import { AnimatePresence } from 'framer-motion';
+import LoginTransition from './features/auth/components/LoginTransition';
+import { TooltipProvider } from '@/components/ui/tooltip';
+
 // Conditional import for Audit feature
 const LoginActivity = import.meta.env.VITE_ENABLE_AUDIT === 'true'
   ? React.lazy(() => import('./features/audit/pages/LoginActivity'))
   : null;
-import { TooltipProvider } from '@/components/ui/tooltip';
 
 
 function App() {
+  const { googleLogin } = useAuth();
+  const navigate = useNavigate();
+  const [showTransition, setShowTransition] = useState(false);
 
   return (
     <TooltipProvider>
@@ -73,6 +80,9 @@ function App() {
           )}
         </Route>
       </Routes>
+      <AnimatePresence>
+        {showTransition && <LoginTransition />}
+      </AnimatePresence>
     </TooltipProvider>
   )
 }
